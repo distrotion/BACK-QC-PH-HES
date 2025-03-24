@@ -225,10 +225,11 @@ router.post('/copy_cp', async (req, res) => {
 
       let copy_from_fn = masterdata[0]['FINAL'] ?? {};
       let copy_from_ic = masterdata[0]['INCOMMING'] ?? {};
+      let copy_from_ip = masterdata[0]['INPROCESS'] ?? {};
 
       let newdata = await mongodb.find(PATTERN, PATTERN_01, { "CP": `${input['CP_NEW']}` });
       if (newdata.length > 0) {
-        let updatePATTERN = await mongodb.update(PATTERN, PATTERN_01, { 'CP': `${input['CP_NEW']}` }, { $set: { 'FINAL': copy_from_fn, 'INCOMMING': copy_from_ic } });
+        let updatePATTERN = await mongodb.update(PATTERN, PATTERN_01, { 'CP': `${input['CP_NEW']}` }, { $set: { 'FINAL': copy_from_fn, 'INCOMMING': copy_from_ic, 'INPROCESS': copy_from_ip } });
         return res.json({ "msg": "OK" });
       } else {
 
@@ -244,6 +245,7 @@ router.post('/copy_cp', async (req, res) => {
             let neworder = ERP_data[i];
             neworder['FINAL'] = copy_from_fn;
             neworder['INCOMMING'] = copy_from_ic;
+            neworder['INPROCESS'] = copy_from_ip;
             let updatePATTERN = await mongodb.insertMany(PATTERN, PATTERN_01, [neworder]);
             // break;
             return res.json({ "msg": "OK" });
